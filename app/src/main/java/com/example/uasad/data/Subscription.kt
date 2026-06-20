@@ -4,13 +4,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-enum class SubscriptionCategory (val value: String){
+enum class SubscriptionCycle (val value: String){
     WEEKLY ("Weekly"),
     MONTHLY ("Monthly"),
     YERALY ("Yearly")
 }
 
-enum class SubscriptionCycle ( val value: String){
+enum class SubscriptionCategory ( val value: String){
     ENTERTAINMENT ("Entertainment"),
     PRODUCTIVITY ("Productivity"),
     EDUCATION ("Education"),
