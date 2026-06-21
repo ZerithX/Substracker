@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Saat item dipilih/aktif -->
+    <item android:state_checked="true">
+        <!-- kasih jarak -->
+        <inset
+            android:insetLeft="25dp"
+            android:insetRight="25dp"
+            android:insetBottom="4dp"
+            android:insetTop="4dp">
+
+            <shape android:shape="rectangle">
+                <solid android:color="#B2DFDB" />
+                <corners android:radius="16dp" />
+            </shape>
+        </inset>
+    </item>
+
+    <!-- Saat tidak dipilih, tampilkan background transparan -->
+    <item>
+        <color android:color="@android:color/transparent" />
+    </item>
+</selector>
