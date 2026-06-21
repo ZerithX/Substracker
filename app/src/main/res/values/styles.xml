@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextStyle_28sp">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:fontFamily">Inter</item>
+    </style>
+    <style name="TextStyle_20sp">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FF1A1C1C</item>
+        <item name="android:fontFamily">Inter</item>
+    </style>
+    <style name="TextStyle_12sp">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#FF4A3AFF</item>
+        <item name="android:fontFamily">Inter</item>
+    </style>
+    <style name="TextStyle_10sp">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#FFB91C1C</item>
+        <item name="android:fontFamily">Inter</item>
+    </style>
+    <style name="TextStyle_18sp">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FF4A3AFF</item>
+        <item name="android:fontFamily">Inter</item>
+    </style>
+<!-- Style untuk ukuran teks -->
+
+    <style name="BottomNavTextStyle" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textSize">11sp</item> <!-- Sesuaikan ukuran teks di sini -->
+        <item name="android:fontFamily">Inter</item>
+    </style>
+
+</resources>
