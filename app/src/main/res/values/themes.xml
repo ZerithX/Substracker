@@ -13,4 +13,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
+    <style name="ShapeAppearance.App.FAB" parent="">
+        <item name="cornerFamily">rounded</item> <!-- Can also use 'cut' -->
+        <item name="cornerSize">16dp</item>     <!-- Or 50% for a circle/pill -->
+    </style>
 </resources>
