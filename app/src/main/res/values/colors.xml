@@ -7,4 +7,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="border_color">#C7C4DA</color>
+
+    // figma
+    <color name="color_26_28_28">#FF1A1C1C</color>
+    <color name="color_70_69_87">#FF464557</color>
+    <color name="color_74_58_255">#FF4A3AFF</color>
+    <color name="color_119_117_136">#FF777588</color>
+    <color name="color_185_28_28">#FFB91C1C</color>
+    <color name="color_249_223_223">#FFF9DFDF</color>
+    <color name="color_249_249_249">#FFF9F9F9</color>
+    <color name="color_250_250_250">#FFFAFAFA</color>
 </resources>

@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">UASAD</string>
+
+    // figma
+    <string name="n">N</string>
+    <string name="nama">Nama</string>
+    <string name="price">Rp 29.900</string>
+    <string name="kategori">Kategori</string>
+    <string name="next_bill_date">Next billing: 21 Jun 2026</string>
+    <string name="cycle">Cycle</string>
+    <string name="text">/bln</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
