@@ -29,6 +29,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+
+        android:contentDescription="Tambah Langganan"
+        android:src="@android:drawable/ic_input_add"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.FAB"
+
+        android:backgroundTint="#2E02E9"
+        app:tint="@android:color/white"
+
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Navigasi Bar-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

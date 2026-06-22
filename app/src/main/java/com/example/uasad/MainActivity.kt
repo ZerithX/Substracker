@@ -1,6 +1,7 @@
 package com.example.uasad
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uasad.databinding.ActivityMainBinding
 import androidx.navigation.fragment.NavHostFragment
@@ -21,5 +22,28 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         binding.bottomNavigation.setupWithNavController(navController)
+
+        // logika muncul fab n bottom nav bar
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.homeFragment, R.id.listFragment, R.id.settingsFragment -> {
+                    binding.bottomNavigation.visibility = View.VISIBLE
+
+                    if (destination.id != R.id.settingsFragment) {
+                        binding.fabAdd?.show()
+                    } else {
+                        binding.fabAdd?.hide()
+                    }
+                } else -> { // addedit fragment
+                    binding.bottomNavigation.visibility = View.GONE
+                    binding.fabAdd.hide()
+                }
+            }
+        }
+
+        // logika navigasi fab
+        binding.fabAdd.setOnClickListener {
+            navController.navigate(R.id.addEditFragment)
+        }
     }
 }

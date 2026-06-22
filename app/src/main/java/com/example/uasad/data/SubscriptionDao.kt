@@ -10,10 +10,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SubscriptionDao{
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    // ABORT untuk konflik data ketika duplikat
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(subscription: Subscription)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertAll(subscriptions: List<Subscription>)
 
     @Update suspend fun update(subscription: Subscription)
