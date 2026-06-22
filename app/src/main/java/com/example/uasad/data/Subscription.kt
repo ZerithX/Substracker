@@ -23,7 +23,7 @@ enum class SubscriptionCategory ( val value: String){
 data class Subscription (
     @PrimaryKey (autoGenerate = true) val id: Int = 0,
     @ColumnInfo (name = "name") val name: String = "",
-    @ColumnInfo (name = "price") val price: Int = 0,
+    @ColumnInfo (name = "price") val price: Double = 0.0,
     @ColumnInfo (name = "category") val category: SubscriptionCategory,
     @ColumnInfo (name = "cycle") val cycle: SubscriptionCycle,
     @ColumnInfo (name = "start_date") val startDate: String = "",
