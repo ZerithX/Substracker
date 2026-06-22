@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 enum class SubscriptionCycle (val value: String){
     WEEKLY ("Weekly"),
     MONTHLY ("Monthly"),
-    YERALY ("Yearly")
+    YEARLY ("Yearly")
 }
 
 enum class SubscriptionCategory ( val value: String){
