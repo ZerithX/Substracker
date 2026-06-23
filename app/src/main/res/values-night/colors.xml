@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="border_color">#464557</color>
+    <color name="reminder_bg">#2C2A3A</color>
+    <color name="reminder_icon_bg">#464557</color>
+</resources>
