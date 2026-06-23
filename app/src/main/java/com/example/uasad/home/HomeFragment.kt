@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.uasad.R
 
+import androidx.navigation.fragment.findNavController
+
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -36,6 +38,15 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        
+        val fabAdd = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fab_add)
+        fabAdd.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_addEditFragment)
+        }
     }
 
     companion object {
