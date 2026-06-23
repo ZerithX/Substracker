@@ -40,15 +40,6 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        
-        val fabAdd = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fab_add)
-        fabAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addEditFragment)
-        }
-    }
-
     companion object {
         /**
          * Use this factory method to create a new instance of

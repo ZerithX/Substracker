@@ -12,15 +12,4 @@
         android:text="Ini fragment home"
         android:gravity="center"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_24"
-        android:contentDescription="Tambah Langganan"
-        app:tint="@color/white"
-        app:backgroundTint="@color/color_74_58_255"/>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
