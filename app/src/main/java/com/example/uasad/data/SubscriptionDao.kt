@@ -27,6 +27,9 @@ interface SubscriptionDao{
     @Query("SELECT * FROM subscription WHERE id = :id LIMIT 1")
     suspend fun getById(id: Int): Subscription?
 
+    @Query("SELECT * FROM subscription WHERE category = :category")
+    fun getByCategory(category: SubscriptionCategory): Flow<List<Subscription>>
+
     @Query("SELECT * FROM subscription ORDER BY next_billing ASC LIMIT 5")
     fun getUpcoming(): Flow<List<Subscription>>
 }
