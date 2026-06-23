@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:text="Tambah Langganan"
             android:textSize="20sp"
+            android:paddingEnd="@dimen/dp_23"
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold"
             android:gravity="center"/>
