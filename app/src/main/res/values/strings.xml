@@ -11,4 +11,20 @@
     <string name="text">/bln</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Settings Page -->
+    <string name="settings_title">Pengaturan</string>
+    <string name="settings_avatar_initial">U</string>
+    <string name="settings_notification_desc">Notifikasi</string>
+    <string name="settings_section_notification">NOTIFIKASI</string>
+    <string name="settings_reminder_label">Waktu Reminder Default</string>
+    <string name="settings_reminder_subtitle">Berlaku untuk langganan baru</string>
+    <string name="settings_reminder_description">Mengatur kapan notifikasi dikirim sebelum\ntanggal billing.</string>
+    <string name="settings_section_about">TENTANG APLIKASI</string>
+    <string name="settings_about_name">SubsTracker</string>
+    <string name="settings_about_version">Versi 1.0</string>
+    <string name="settings_about_description">Aplikasi pintar untuk melacak, mengelola,\ndan mengoptimalkan seluruh langganan\nbulanan Anda dalam satu tempat.</string>
+    <string name="settings_about_author_label">DIBUAT OLEH</string>
+    <string name="settings_about_author_value">SubsTracker Team • PAM 2026</string>
+    <string name="settings_about_copyright">© 2026 SubsTracker. All rights reserved.</string>
 </resources>
