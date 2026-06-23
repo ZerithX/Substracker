@@ -10,9 +10,6 @@
         android:name="com.example.uasad.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_homeFragment_to_addEditFragment"
-            app:destination="@id/addEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
