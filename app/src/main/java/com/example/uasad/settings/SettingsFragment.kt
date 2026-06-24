@@ -1,60 +1,102 @@
 package com.example.uasad.settings
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.uasad.R
+import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
+import androidx.fragment.app.Fragment
+import com.example.uasad.databinding.FragmentSettingsBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SettingsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SettingsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
+
+    companion object {
+        private const val PREFS_NAME = "settings_prefs"
+        private const val KEY_REMINDER_VALUE = "reminder_value"
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+    ): View {
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SettingsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SettingsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupReminder()
+        setupAboutSection()
+        setupHeaderNotification()
+    }
+
+    /**
+     * Setup dropdown pengingat pembayaran menggunakan PopupMenu.
+     * Pilihan disimpan di SharedPreferences.
+     */
+    private fun setupReminder() {
+        val prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val selectedReminder = prefs.getString(KEY_REMINDER_VALUE, "H-1") ?: "H-1"
+
+        binding.tvDropdownValue.text = selectedReminder
+
+        binding.dropdownReminderPill.setOnClickListener { view ->
+            val popup = PopupMenu(requireContext(), view)
+            popup.menu.add("H-1 (1 hari sebelum)")
+            popup.menu.add("H-2 (2 hari sebelum)")
+            popup.menu.add("H-3 (3 hari sebelum)")
+            popup.menu.add("H-7 (7 hari sebelum)")
+
+            popup.setOnMenuItemClickListener { item ->
+                val text = item.title.toString()
+                // Ambil string pendeknya (misal "H-1")
+                val shortVal = text.substringBefore(" ")
+                
+                prefs.edit().putString(KEY_REMINDER_VALUE, shortVal).apply()
+                binding.tvDropdownValue.text = shortVal
+                
+                Toast.makeText(
+                    requireContext(),
+                    "Waktu reminder diubah ke $shortVal",
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
             }
+            popup.show()
+        }
+    }
+
+    /**
+     * Setup section Tentang Aplikasi.
+     * Mengisi versi aplikasi secara dinamis jika memungkinkan.
+     */
+    private fun setupAboutSection() {
+        try {
+            val packageInfo = requireContext().packageManager
+                .getPackageInfo(requireContext().packageName, 0)
+            binding.aboutAppVersion.text = "Versi ${packageInfo.versionName}"
+        } catch (_: Exception) {
+            // Gunakan default "Versi 1.0" dari XML
+        }
+    }
+
+    /**
+     * Setup tombol notifikasi di header.
+     */
+    private fun setupHeaderNotification() {
+        binding.btnHeaderNotification.setOnClickListener {
+            Toast.makeText(requireContext(), "Tidak ada notifikasi baru", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

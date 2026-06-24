@@ -18,6 +18,7 @@
     <color name="color_249_223_223">#FFF9DFDF</color>
     <color name="color_249_249_249">#FFF9F9F9</color>
     <color name="color_250_250_250">#FFFAFAFA</color>
+    <color name="color_bg_lavender">#FFF4F3FF</color>
     <color name="reminder_bg">#F8F6FF</color>
     <color name="reminder_icon_bg">#FFFFFF</color>
 </resources>

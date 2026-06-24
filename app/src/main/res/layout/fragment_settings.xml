@@ -1,15 +1,355 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_bg_lavender"
+    android:fillViewport="true"
     tools:context=".settings.SettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Ini fragment settings" />
-<!--        android:text="@string/hello_blank_fragment"-->
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="32dp">
 
-</FrameLayout>
+        <!-- ============ HEADER - TOP APP BAR ============ -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/color_bg_lavender">
+
+            <!-- Left: Avatar -->
+            <FrameLayout
+                android:id="@+id/header_avatar_container"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_avatar_circle" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/settings_avatar_initial"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-bold" />
+            </FrameLayout>
+
+            <!-- Center: Title -->
+            <TextView
+                android:id="@+id/tv_settings_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_title"
+                android:textColor="@color/color_74_58_255"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Right: Trailing Icon (Notification Bell) -->
+            <ImageButton
+                android:id="@+id/btn_header_notification"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/settings_notification_desc"
+                android:src="@drawable/ic_notifications_24"
+                app:tint="@color/color_74_58_255"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- ============ SECTION: NOTIFIKASI ============ -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/settings_section_notification"
+            android:textColor="@color/color_119_117_136"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.08" />
+
+        <!-- Card: Notification Settings -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/card_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_white_card_16dp"
+            android:padding="16dp">
+
+            <!-- Left: Bell Icon in Circle -->
+            <FrameLayout
+                android:id="@+id/icon_bell_container"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_avatar_circle" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/settings_reminder_label"
+                    android:src="@drawable/ic_notifications_24"
+                    app:tint="@color/white" />
+            </FrameLayout>
+
+            <!-- Middle: Texts -->
+            <LinearLayout
+                android:id="@+id/texts_reminder_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toStartOf="@id/dropdown_reminder_pill"
+                app:layout_constraintStart_toEndOf="@id/icon_bell_container"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_reminder_label"
+                    android:textColor="@color/color_26_28_28"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/settings_reminder_subtitle"
+                    android:textColor="@color/color_119_117_136"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif" />
+            </LinearLayout>
+
+            <!-- Right: Dropdown Pill -->
+            <LinearLayout
+                android:id="@+id/dropdown_reminder_pill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_dropdown_pill"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
+                app:layout_constraintBottom_toBottomOf="@id/texts_reminder_container"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/texts_reminder_container">
+
+                <TextView
+                    android:id="@+id/tv_dropdown_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="H-1"
+                    android:textColor="@color/color_26_28_28"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-bold" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_chevron_right_24"
+                    android:rotation="90"
+                    app:tint="@color/color_119_117_136" />
+            </LinearLayout>
+
+            <!-- Bottom: Description -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/settings_reminder_description"
+                android:textColor="@color/color_119_117_136"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/texts_reminder_container"
+                app:layout_constraintTop_toBottomOf="@id/texts_reminder_container" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- ============ SECTION: TENTANG APLIKASI ============ -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/settings_section_about"
+            android:textColor="@color/color_119_117_136"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.08" />
+
+        <!-- Card: About App -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_white_card_16dp"
+            android:paddingBottom="24dp">
+
+            <!-- Gradient Banner -->
+            <View
+                android:id="@+id/about_banner"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:background="@drawable/bg_about_gradient"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- App Icon (overlaps banner bottom) -->
+            <ImageView
+                android:id="@+id/about_app_icon"
+                android:layout_width="125dp"
+                android:layout_height="143dp"
+                android:elevation="8dp"
+                android:src="@drawable/ic_subs_tracker_logo"
+                app:layout_constraintBottom_toBottomOf="@id/about_banner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/about_banner" />
+
+            <!-- App Name -->
+            <TextView
+                android:id="@+id/about_app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
+                android:text="@string/settings_about_name"
+                android:textColor="@color/color_26_28_28"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/about_banner" />
+
+            <!-- App Version -->
+            <TextView
+                android:id="@+id/about_app_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/settings_about_version"
+                android:textColor="@color/color_119_117_136"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/about_app_name" />
+
+            <!-- App Description -->
+            <TextView
+                android:id="@+id/about_app_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="24dp"
+                android:gravity="center"
+                android:text="@string/settings_about_description"
+                android:textColor="@color/color_70_69_87"
+                android:textSize="12sp"
+                android:lineSpacingMultiplier="1.2"
+                android:fontFamily="sans-serif"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/about_app_version" />
+
+            <!-- Separator -->
+            <View
+                android:id="@+id/about_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="24dp"
+                android:background="#FFE4E3FF"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/about_app_description" />
+
+            <!-- Author Label -->
+            <TextView
+                android:id="@+id/about_author_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/settings_about_author_label"
+                android:textColor="@color/color_119_117_136"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/about_separator" />
+
+            <!-- Author Value -->
+            <TextView
+                android:id="@+id/about_author_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/settings_about_author_value"
+                android:textColor="@color/color_26_28_28"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/about_author_label" />
+
+            <!-- Copyright -->
+            <TextView
+                android:id="@+id/about_copyright"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/settings_about_copyright"
+                android:textColor="@color/color_119_117_136"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/about_author_value" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</ScrollView>
