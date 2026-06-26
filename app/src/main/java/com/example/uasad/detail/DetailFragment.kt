@@ -19,6 +19,8 @@ import com.example.uasad.data.SubscriptionViewModel
 import com.example.uasad.data.SubscriptionViewModelFactory
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.android.material.snackbar.Snackbar
+import com.example.uasad.utils.AlarmUtils
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -117,8 +119,9 @@ class DetailFragment : Fragment() {
                     .setTitle("Hapus Subscription")
                     .setMessage("Hapus ${sub.name}?")
                     .setPositiveButton("Hapus") { _, _ ->
+                        AlarmUtils.cancelAlarm(requireContext(), sub.id)
                         viewModel.delete(sub)
-                        Toast.makeText(requireContext(), "Berhasil dihapus", Toast.LENGTH_SHORT).show()
+                        Snackbar.make(requireActivity().findViewById(android.R.id.content), "Subscription ${sub.name} berhasil dihapus", Snackbar.LENGTH_LONG).show()
                         findNavController().navigateUp()
                     }
                     .setNegativeButton("Batal", null)
