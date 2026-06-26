@@ -23,6 +23,11 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import android.widget.TextView
+import com.example.uasad.utils.AlarmUtils
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.Calendar
 
 class AddEditFragment : Fragment() {
 
@@ -87,8 +92,11 @@ class AddEditFragment : Fragment() {
         val tilName = view.findViewById<TextInputLayout>(R.id.til_name)
         val tilPrice = view.findViewById<TextInputLayout>(R.id.til_price)
         val tilDate = view.findViewById<TextInputLayout>(R.id.til_date)
+        val tvTitle = view.findViewById<TextView>(R.id.tv_title)
 
         if (isEditMode) {
+            tvTitle.text = "Edit Subscription"
+            btnSave.text = "Update"
             viewModel.getById(subscriptionId).observe(viewLifecycleOwner) { subscription ->
                 subscription?.let {
                     etName.setText(it.name)
@@ -196,6 +204,27 @@ class AddEditFragment : Fragment() {
                 )
                 viewModel.update(updatedSubscription)
                 Toast.makeText(requireContext(), "Langganan berhasil diperbarui!", Toast.LENGTH_SHORT).show()
+                
+                if (reminder) {
+                    try {
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        val date = sdf.parse(nextBilling)
+                        if (date != null) {
+                            val calendar = Calendar.getInstance()
+                            calendar.time = date
+                            // Set alarm at 8:00 AM on the billing day, or maybe exactly the date
+                            calendar.set(Calendar.HOUR_OF_DAY, 8)
+                            calendar.set(Calendar.MINUTE, 0)
+                            calendar.set(Calendar.SECOND, 0)
+                            AlarmUtils.setAlarm(requireContext(), subscriptionId, calendar.timeInMillis)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    AlarmUtils.cancelAlarm(requireContext(), subscriptionId)
+                }
+                
             } else {
                 val newSubscription = Subscription(
                     name = name,
