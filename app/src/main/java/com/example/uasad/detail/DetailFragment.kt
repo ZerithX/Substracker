@@ -1,32 +1,37 @@
 package com.example.uasad.detail
 
+import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.uasad.R
+import com.example.uasad.data.DatabaseBuilder
+import com.example.uasad.data.Subscription
+import com.example.uasad.data.SubscriptionRepository
+import com.example.uasad.data.SubscriptionViewModel
+import com.example.uasad.data.SubscriptionViewModelFactory
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.switchmaterial.SwitchMaterial
+import java.text.NumberFormat
+import java.util.Locale
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [DetailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class DetailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var viewModel: SubscriptionViewModel
+    private var subscriptionId: Int = -1
+    private var currentSubscription: Subscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            subscriptionId = it.getInt("subscriptionId", -1)
         }
     }
 
@@ -34,27 +39,120 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DetailFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Initialize ViewModel
+        val database = DatabaseBuilder.getInstance(requireContext())
+        val repository = SubscriptionRepository(database.subscriptionDao())
+        val factory = SubscriptionViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory).get(SubscriptionViewModel::class.java)
+
+        val btnBack = view.findViewById<ImageView>(R.id.btn_back)
+        val btnDelete = view.findViewById<MaterialButton>(R.id.btn_delete)
+        val btnEdit = view.findViewById<MaterialButton>(R.id.btn_edit)
+
+        val tvAvatar = view.findViewById<TextView>(R.id.tv_avatar)
+        val tvName = view.findViewById<TextView>(R.id.tv_detail_name)
+        val tvCategory = view.findViewById<TextView>(R.id.tv_detail_category)
+        val tvPrice = view.findViewById<TextView>(R.id.tv_detail_price)
+        val tvCycle = view.findViewById<TextView>(R.id.tv_detail_cycle)
+        val tvStartDate = view.findViewById<TextView>(R.id.tv_detail_start_date)
+        val tvNextBilling = view.findViewById<TextView>(R.id.tv_detail_next_billing)
+        val tvCountdown = view.findViewById<TextView>(R.id.tv_detail_countdown)
+        val switchReminder = view.findViewById<SwitchMaterial>(R.id.switch_detail_reminder)
+        val tvNotes = view.findViewById<TextView>(R.id.tv_detail_notes)
+
+        btnBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        if (subscriptionId != -1) {
+            viewModel.getById(subscriptionId).observe(viewLifecycleOwner) { subscription ->
+                subscription?.let {
+                    currentSubscription = it
+                    
+                    val initial = it.name.firstOrNull()?.uppercase() ?: "S"
+                    tvAvatar.text = initial
+                    
+                    tvName.text = it.name
+                    tvCategory.text = it.category.value
+                    
+                    val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+                    tvPrice.text = formatRupiah.format(it.price).replace("Rp", "Rp ")
+                    
+                    tvCycle.text = it.cycle.value
+                    tvStartDate.text = it.startDate
+                    tvNextBilling.text = it.nextBilling
+                    
+                    // Simple countdown logic (optional feature based on UI)
+                    // For now just showing a placeholder or calculating days
+                    tvCountdown.visibility = View.VISIBLE
+                    tvCountdown.text = calculateDaysLeft(it.nextBilling)
+                    
+                    switchReminder.isChecked = it.reminderEnabled
+                    
+                    if (it.notes.isNotEmpty()) {
+                        tvNotes.text = it.notes
+                    } else {
+                        tvNotes.text = "Tidak ada catatan"
+                    }
                 }
             }
+        }
+
+        btnEdit.setOnClickListener {
+            val bundle = Bundle().apply {
+                putInt("subscriptionId", subscriptionId)
+            }
+            findNavController().navigate(R.id.addEditFragment, bundle)
+        }
+
+        btnDelete.setOnClickListener {
+            currentSubscription?.let { sub ->
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Hapus Subscription")
+                    .setMessage("Hapus ${sub.name}?")
+                    .setPositiveButton("Hapus") { _, _ ->
+                        viewModel.delete(sub)
+                        Toast.makeText(requireContext(), "Berhasil dihapus", Toast.LENGTH_SHORT).show()
+                        findNavController().navigateUp()
+                    }
+                    .setNegativeButton("Batal", null)
+                    .show()
+            }
+        }
+    }
+    
+    private fun calculateDaysLeft(nextBilling: String): String {
+        try {
+            val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+            val date = sdf.parse(nextBilling)
+            if (date != null) {
+                val today = java.util.Calendar.getInstance()
+                // Reset time to start of day
+                today.set(java.util.Calendar.HOUR_OF_DAY, 0)
+                today.set(java.util.Calendar.MINUTE, 0)
+                today.set(java.util.Calendar.SECOND, 0)
+                today.set(java.util.Calendar.MILLISECOND, 0)
+                
+                val diff = date.time - today.timeInMillis
+                val days = java.util.concurrent.TimeUnit.DAYS.convert(diff, java.util.concurrent.TimeUnit.MILLISECONDS)
+                
+                return if (days > 0) {
+                    "$days Hari Lagi!"
+                } else if (days == 0L) {
+                    "Hari Ini!"
+                } else {
+                    "Terlewat ${-days} Hari!"
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return "N/A"
     }
 }

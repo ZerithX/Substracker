@@ -27,6 +27,8 @@ import com.google.android.material.textfield.TextInputLayout
 class AddEditFragment : Fragment() {
 
     private lateinit var viewModel: SubscriptionViewModel
+    private var subscriptionId: Int = -1
+    private var isEditMode: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +60,11 @@ class AddEditFragment : Fragment() {
         
         val etDate = view.findViewById<TextInputEditText>(R.id.et_date)
 
+        arguments?.let {
+            subscriptionId = it.getInt("subscriptionId", -1)
+            isEditMode = subscriptionId != -1
+        }
+
         // 2. Setup Spinner Data untuk Siklus Billing
         val cycles = SubscriptionCycle.values().map { it.value }
         val cycleAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, cycles)
@@ -80,6 +87,20 @@ class AddEditFragment : Fragment() {
         val tilName = view.findViewById<TextInputLayout>(R.id.til_name)
         val tilPrice = view.findViewById<TextInputLayout>(R.id.til_price)
         val tilDate = view.findViewById<TextInputLayout>(R.id.til_date)
+
+        if (isEditMode) {
+            viewModel.getById(subscriptionId).observe(viewLifecycleOwner) { subscription ->
+                subscription?.let {
+                    etName.setText(it.name)
+                    etPrice.setText(if (it.price % 1.0 == 0.0) it.price.toInt().toString() else it.price.toString())
+                    etNote.setText(it.notes)
+                    switchReminder.isChecked = it.reminderEnabled
+                    spinnerCycle.setText(it.cycle.value, false)
+                    spinnerCategory.setText(it.category.value, false)
+                    etDate.setText(it.startDate)
+                }
+            }
+        }
 
         btnSave.setOnClickListener {
             // Ambil input dari user
@@ -161,19 +182,35 @@ class AddEditFragment : Fragment() {
             }
 
             // 4. Simpan ke Database melalui ViewModel
-            val newSubscription = Subscription(
-                name = name,
-                price = price!!,
-                category = selectedCategory,
-                cycle = selectedCycle,
-                startDate = startDate,
-                nextBilling = nextBilling,
-                reminderEnabled = reminder,
-                notes = note
-            )
-
-            viewModel.insert(newSubscription)
-            Toast.makeText(requireContext(), "Langganan berhasil disimpan!", Toast.LENGTH_SHORT).show()
+            if (isEditMode) {
+                val updatedSubscription = Subscription(
+                    id = subscriptionId,
+                    name = name,
+                    price = price!!,
+                    category = selectedCategory,
+                    cycle = selectedCycle,
+                    startDate = startDate,
+                    nextBilling = nextBilling,
+                    reminderEnabled = reminder,
+                    notes = note
+                )
+                viewModel.update(updatedSubscription)
+                Toast.makeText(requireContext(), "Langganan berhasil diperbarui!", Toast.LENGTH_SHORT).show()
+            } else {
+                val newSubscription = Subscription(
+                    name = name,
+                    price = price!!,
+                    category = selectedCategory,
+                    cycle = selectedCycle,
+                    startDate = startDate,
+                    nextBilling = nextBilling,
+                    reminderEnabled = reminder,
+                    notes = note
+                )
+                viewModel.insert(newSubscription)
+                Toast.makeText(requireContext(), "Langganan berhasil disimpan!", Toast.LENGTH_SHORT).show()
+            }
+            
             findNavController().navigateUp()
         }
     }
