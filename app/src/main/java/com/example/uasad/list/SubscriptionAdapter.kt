@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.uasad.data.Subscription
 import com.example.uasad.data.SubscriptionCategory
 import com.example.uasad.data.SubscriptionCycle
+import com.example.uasad.data.getBrandColor
 import com.example.uasad.databinding.ItemSubscriptionGridBinding
 import com.example.uasad.databinding.ItemSubscriptionListBinding
 import java.text.NumberFormat
@@ -76,7 +77,7 @@ class SubscriptionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.tvAvatar.text = initial
 
             // Set warna background avatar dinamis berdasarkan nama brand atau kategori
-            val brandColor = getBrandColor(subscription)
+            val brandColor = subscription.getBrandColor()
             val drawable = binding.tvAvatar.background as? GradientDrawable
             drawable?.setColor(brandColor)
 
@@ -143,7 +144,7 @@ class SubscriptionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.tvGridAvatar.text = initial
 
             // Set warna background header dinamis
-            val brandColor = getBrandColor(subscription)
+            val brandColor = subscription.getBrandColor()
             binding.flHeaderBg.setBackgroundColor(brandColor)
 
             // Nama layanan
@@ -230,29 +231,6 @@ class SubscriptionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private fun formatRupiah(price: Double): String {
         val format = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
         return format.format(price).replace("Rp", "Rp ")
-    }
-
-    private fun getBrandColor(subscription: Subscription): Int {
-        val name = subscription.name.lowercase(Locale.getDefault()).trim()
-        return when {
-            name.contains("netflix") -> Color.parseColor("#E50914")
-            name.contains("spotify") -> Color.parseColor("#1DB954")
-            name.contains("youtube") -> Color.parseColor("#FF0000")
-            name.contains("notion") -> Color.parseColor("#000000")
-            name.contains("github") -> Color.parseColor("#1F2328")
-            name.contains("google") -> Color.parseColor("#4285F4")
-            else -> {
-                // Fallback ke warna kategori
-                when (subscription.category) {
-                    SubscriptionCategory.ENTERTAINMENT -> Color.parseColor("#E91E63")
-                    SubscriptionCategory.PRODUCTIVITY -> Color.parseColor("#3F51B5")
-                    SubscriptionCategory.CLOUDSTORAGE -> Color.parseColor("#00BCD4")
-                    SubscriptionCategory.EDUCATION -> Color.parseColor("#FF9800")
-                    SubscriptionCategory.GAMING -> Color.parseColor("#9C27B0")
-                    else -> Color.parseColor("#757575")
-                }
-            }
-        }
     }
 
     private fun styleCategoryBadge(textView: TextView, category: SubscriptionCategory) {

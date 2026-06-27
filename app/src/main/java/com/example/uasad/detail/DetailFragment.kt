@@ -14,12 +14,16 @@ import androidx.navigation.fragment.findNavController
 import com.example.uasad.R
 import com.example.uasad.data.DatabaseBuilder
 import com.example.uasad.data.Subscription
+import com.example.uasad.data.getBrandColor
 import com.example.uasad.data.SubscriptionRepository
 import com.example.uasad.data.SubscriptionViewModel
 import com.example.uasad.data.SubscriptionViewModelFactory
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.snackbar.Snackbar
+import android.content.res.ColorStateList
+import android.graphics.Color
+import com.example.uasad.data.SubscriptionCategory
 import com.example.uasad.utils.AlarmUtils
 import java.text.NumberFormat
 import java.util.Locale
@@ -77,11 +81,22 @@ class DetailFragment : Fragment() {
                 subscription?.let {
                     currentSubscription = it
                     
+                    // Get brand color (same as grid and list backgrounds)
+                    val brandColor = it.getBrandColor()
+                    
+                    // Set fragment background to the brand color
+                    view.setBackgroundColor(brandColor)
+                    
+                    // Set avatar circle background to white and letter color to the brand color
+                    tvAvatar.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                    tvAvatar.setTextColor(brandColor)
+                    
                     val initial = it.name.firstOrNull()?.uppercase() ?: "S"
                     tvAvatar.text = initial
                     
                     tvName.text = it.name
                     tvCategory.text = it.category.value
+                    styleCategoryBadge(tvCategory, it.category)
                     
                     val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
                     tvPrice.text = formatRupiah.format(it.price).replace("Rp", "Rp ")
@@ -157,5 +172,18 @@ class DetailFragment : Fragment() {
             e.printStackTrace()
         }
         return "N/A"
+    }
+
+    private fun styleCategoryBadge(textView: TextView, category: SubscriptionCategory) {
+        val (bgColor, textColor) = when (category) {
+            SubscriptionCategory.ENTERTAINMENT -> Pair("#FCE4EC", "#C2185B")
+            SubscriptionCategory.PRODUCTIVITY -> Pair("#E8EAF6", "#3F51B5")
+            SubscriptionCategory.CLOUDSTORAGE -> Pair("#E0F7FA", "#00838F")
+            SubscriptionCategory.EDUCATION -> Pair("#FFF3E0", "#E65100")
+            SubscriptionCategory.GAMING -> Pair("#F3E5F5", "#7B1FA2")
+            else -> Pair("#F5F5F5", "#616161")
+        }
+        textView.backgroundTintList = ColorStateList.valueOf(Color.parseColor(bgColor))
+        textView.setTextColor(Color.parseColor(textColor))
     }
 }
