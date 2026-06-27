@@ -134,7 +134,7 @@ class DetailFragment : Fragment() {
                     .setTitle("Hapus Subscription")
                     .setMessage("Hapus ${sub.name}?")
                     .setPositiveButton("Hapus") { _, _ ->
-                        AlarmUtils.cancelAlarm(requireContext(), sub.id)
+                        com.example.uasad.utils.AlarmScheduler.cancelReminder(requireContext(), sub.id)
                         viewModel.delete(sub)
                         Snackbar.make(requireActivity().findViewById(android.R.id.content), "Subscription ${sub.name} berhasil dihapus", Snackbar.LENGTH_LONG).show()
                         findNavController().navigateUp()

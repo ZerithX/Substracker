@@ -45,5 +45,35 @@ class MainActivity : AppCompatActivity() {
         binding.fabAdd.setOnClickListener {
             navController.navigate(R.id.addEditFragment)
         }
+        
+        // Handle Notification Intent
+        val openDetailId = intent.getIntExtra("OPEN_DETAIL", -1)
+        if (openDetailId != -1) {
+            val bundle = Bundle().apply {
+                putInt("subscriptionId", openDetailId)
+            }
+            navController.navigate(R.id.detailFragment, bundle)
+        }
+        
+        // Request POST_NOTIFICATIONS runtime permission for Android 13+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: android.content.Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val openDetailId = intent?.getIntExtra("OPEN_DETAIL", -1) ?: -1
+        if (openDetailId != -1) {
+            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navController = navHostFragment.navController
+            val bundle = Bundle().apply {
+                putInt("subscriptionId", openDetailId)
+            }
+            navController.navigate(R.id.detailFragment, bundle)
+        }
     }
 }

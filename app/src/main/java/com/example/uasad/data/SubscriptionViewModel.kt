@@ -15,8 +15,9 @@ class SubscriptionViewModel(private val repository: SubscriptionRepository) : Vi
     val allSubscriptions: LiveData<List<Subscription>> = repository.allSubscriptions.asLiveData()
     val upcomingSubscriptions: LiveData<List<Subscription>> = repository.upcomingSubscriptions.asLiveData()
 
-    fun insert(subscription: Subscription) = viewModelScope.launch {
-        repository.insert(subscription)
+    fun insert(subscription: Subscription, onInserted: (Long) -> Unit = {}) = viewModelScope.launch {
+        val id = repository.insert(subscription)
+        onInserted(id)
     }
 
     fun update(subscription: Subscription) = viewModelScope.launch {

@@ -206,24 +206,12 @@ class AddEditFragment : Fragment() {
                 Toast.makeText(requireContext(), "Langganan berhasil diperbarui!", Toast.LENGTH_SHORT).show()
                 
                 if (reminder) {
-                    try {
-                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                        val date = sdf.parse(nextBilling)
-                        if (date != null) {
-                            val calendar = Calendar.getInstance()
-                            calendar.time = date
-                            // Set alarm at 8:00 AM on the billing day, or maybe exactly the date
-                            calendar.set(Calendar.HOUR_OF_DAY, 8)
-                            calendar.set(Calendar.MINUTE, 0)
-                            calendar.set(Calendar.SECOND, 0)
-                            AlarmUtils.setAlarm(requireContext(), subscriptionId, calendar.timeInMillis)
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                    com.example.uasad.utils.AlarmScheduler.scheduleReminder(requireContext(), updatedSubscription, 1) // default 1 hari
                 } else {
-                    AlarmUtils.cancelAlarm(requireContext(), subscriptionId)
+                    com.example.uasad.utils.AlarmScheduler.cancelReminder(requireContext(), subscriptionId)
                 }
+                
+                findNavController().navigateUp()
                 
             } else {
                 val newSubscription = Subscription(
@@ -236,11 +224,15 @@ class AddEditFragment : Fragment() {
                     reminderEnabled = reminder,
                     notes = note
                 )
-                viewModel.insert(newSubscription)
+                viewModel.insert(newSubscription) { insertedId ->
+                    val finalSubscription = newSubscription.copy(id = insertedId.toInt())
+                    if (reminder) {
+                        com.example.uasad.utils.AlarmScheduler.scheduleReminder(requireContext(), finalSubscription, 1)
+                    }
+                }
                 Toast.makeText(requireContext(), "Langganan berhasil disimpan!", Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp()
             }
-            
-            findNavController().navigateUp()
         }
     }
 
