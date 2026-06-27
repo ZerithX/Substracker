@@ -32,3 +32,26 @@ data class Subscription (
     @ColumnInfo (name = "notes") val notes: String = "",
     @ColumnInfo (name = "created_at") val createdAt: String = ""
 )
+
+fun Subscription.getBrandColor(): Int {
+    val name = this.name.lowercase(java.util.Locale.getDefault()).trim()
+    return when {
+        name.contains("netflix") -> android.graphics.Color.parseColor("#E50914")
+        name.contains("spotify") -> android.graphics.Color.parseColor("#1DB954")
+        name.contains("youtube") -> android.graphics.Color.parseColor("#FF0000")
+        name.contains("notion") -> android.graphics.Color.parseColor("#000000")
+        name.contains("github") -> android.graphics.Color.parseColor("#1F2328")
+        name.contains("google") -> android.graphics.Color.parseColor("#4285F4")
+        else -> {
+            // Fallback ke warna kategori
+            when (this.category) {
+                SubscriptionCategory.ENTERTAINMENT -> android.graphics.Color.parseColor("#E91E63")
+                SubscriptionCategory.PRODUCTIVITY -> android.graphics.Color.parseColor("#3F51B5")
+                SubscriptionCategory.CLOUDSTORAGE -> android.graphics.Color.parseColor("#00BCD4")
+                SubscriptionCategory.EDUCATION -> android.graphics.Color.parseColor("#FF9800")
+                SubscriptionCategory.GAMING -> android.graphics.Color.parseColor("#9C27B0")
+                else -> android.graphics.Color.parseColor("#757575")
+            }
+        }
+    }
+}

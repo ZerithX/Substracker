@@ -81,7 +81,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="32dp"
-        android:background="@drawable/bg_white_card_16dp"
+        android:background="@drawable/bg_white_card_top_16dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/bottom_bar"
         app:layout_constraintEnd_toEndOf="parent"
