@@ -5,56 +5,84 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uasad.R
+import com.example.uasad.data.SubscriptionCycle
+import com.example.uasad.data.SubscriptionViewModel
+import com.example.uasad.data.SubscriptionViewModelFactory
+import com.example.uasad.data.SubsTrackerDatabase
+import com.example.uasad.data.SubscriptionRepository
+import com.example.uasad.data.DatabaseBuilder
+import com.example.uasad.databinding.FragmentHomeBinding
+import java.text.NumberFormat
+import java.util.Locale
+import java.text.SimpleDateFormat
+import java.util.Date
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: SubscriptionViewModel by activityViewModels {
+        SubscriptionViewModelFactory(
+            SubscriptionRepository(
+                DatabaseBuilder.getInstance(requireContext().applicationContext).subscriptionDao()
+            )
+        )
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Setup RecyclerView
+        val adapter = UpcomingAdapter { subscription ->
+            // Opsional: navigasi ke detail
+        }
+        binding.rvUpcoming.layoutManager = LinearLayoutManager(context)
+        binding.rvUpcoming.adapter = adapter
+
+        // Setup FAB navigasi ke Tambah
+        binding.fabAdd.setOnClickListener {
+            findNavController().navigate(R.id.addEditFragment)
+        }
+
+        // Observe upcoming bills
+        viewModel.upcomingSubscriptions.observe(viewLifecycleOwner) { subscriptions ->
+            adapter.submitList(subscriptions)
+        }
+
+        // Observe total spending
+        viewModel.allSubscriptions.observe(viewLifecycleOwner) { subscriptions ->
+            binding.tvActiveSubs.text = "${subscriptions.size} langganan aktif"
+            
+            var total = 0.0
+            subscriptions.forEach { subscription ->
+                total += when (subscription.cycle) {
+                    SubscriptionCycle.WEEKLY -> subscription.price * 4
+                    SubscriptionCycle.MONTHLY -> subscription.price
+                    SubscriptionCycle.YEARLY -> subscription.price / 12
                 }
             }
+            
+            val format = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+            val formatted = format.format(total).replace("Rp", "Rp ")
+            binding.tvTotalSpending.text = formatted
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
