@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface SubscriptionDao{
     // ABORT untuk konflik data ketika duplikat
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(subscription: Subscription)
+    suspend fun insert(subscription: Subscription): Long
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertAll(subscriptions: List<Subscription>)

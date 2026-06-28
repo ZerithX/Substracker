@@ -7,8 +7,8 @@ class SubscriptionRepository(private val subscriptionDao: SubscriptionDao) {
     val allSubscriptions: Flow<List<Subscription>> = subscriptionDao.getAll()
     val upcomingSubscriptions: Flow<List<Subscription>> = subscriptionDao.getUpcoming()
 
-    suspend fun insert(subscription: Subscription) {
-        subscriptionDao.insert(subscription)
+    suspend fun insert(subscription: Subscription): Long {
+        return subscriptionDao.insert(subscription)
     }
 
     suspend fun update(subscription: Subscription) {
