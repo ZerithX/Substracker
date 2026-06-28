@@ -59,7 +59,15 @@ class HomeFragment : Fragment() {
 
         // Observe upcoming bills
         viewModel.upcomingSubscriptions.observe(viewLifecycleOwner) { subscriptions ->
-            adapter.submitList(subscriptions)
+            if (subscriptions.isNullOrEmpty()) {
+                binding.rvUpcoming.visibility = View.GONE
+                binding.layoutUpcomingEmptyState.visibility = View.VISIBLE
+                adapter.submitList(emptyList())
+            } else {
+                binding.rvUpcoming.visibility = View.VISIBLE
+                binding.layoutUpcomingEmptyState.visibility = View.GONE
+                adapter.submitList(subscriptions)
+            }
         }
 
         // Observe total spending
