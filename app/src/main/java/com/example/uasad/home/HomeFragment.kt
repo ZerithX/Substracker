@@ -52,11 +52,6 @@ class HomeFragment : Fragment() {
         binding.rvUpcoming.layoutManager = LinearLayoutManager(context)
         binding.rvUpcoming.adapter = adapter
 
-        // Setup FAB navigasi ke Tambah
-        binding.fabAdd.setOnClickListener {
-            findNavController().navigate(R.id.addEditFragment)
-        }
-
         // Observe upcoming bills
         viewModel.upcomingSubscriptions.observe(viewLifecycleOwner) { subscriptions ->
             if (subscriptions.isNullOrEmpty()) {
