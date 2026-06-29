@@ -27,6 +27,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Sort Button -->
+        <ImageView
+            android:id="@+id/btn_sort"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_filter_list_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_layout_list"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <!-- List Layout Button -->
         <ImageView
             android:id="@+id/btn_layout_list"
