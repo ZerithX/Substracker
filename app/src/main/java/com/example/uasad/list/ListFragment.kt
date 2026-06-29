@@ -32,6 +32,10 @@ class ListFragment : Fragment() {
 
     private var isGridView = false
 
+    enum class SortOption { NONE, PRICE_ASC, PRICE_DESC, DATE_ASC, DATE_DESC }
+    private var currentSortOption = SortOption.NONE
+    private var currentSubscriptions: List<Subscription> = emptyList()
+
     companion object {
         private const val PREFS_NAME = "list_prefs"
         private const val KEY_IS_GRID_VIEW = "is_grid_view"
@@ -85,6 +89,11 @@ class ListFragment : Fragment() {
                 prefs.edit().putBoolean(KEY_IS_GRID_VIEW, isGridView).apply()
                 updateLayoutManager()
             }
+        }
+
+        // 5. Setup Sort Button
+        binding.btnSort.setOnClickListener {
+            showSortMenu(it)
         }
 
 
@@ -184,15 +193,53 @@ class ListFragment : Fragment() {
     }
 
     private fun handleDataList(list: List<Subscription>?) {
-        if (list.isNullOrEmpty()) {
+        currentSubscriptions = list ?: emptyList()
+        if (currentSubscriptions.isEmpty()) {
             binding.rvSubscriptions.visibility = View.GONE
             binding.layoutEmptyState.visibility = View.VISIBLE
             adapter.submitList(emptyList())
         } else {
             binding.rvSubscriptions.visibility = View.VISIBLE
             binding.layoutEmptyState.visibility = View.GONE
-            adapter.submitList(list)
+            applySortingAndSubmit()
         }
+    }
+
+    private fun showSortMenu(anchor: View) {
+        val popup = android.widget.PopupMenu(requireContext(), anchor)
+        popup.menu.add(0, 0, 0, "Default (Tanpa Urutan)")
+        popup.menu.add(0, 1, 1, "Harga (Rendah - Tinggi)")
+        popup.menu.add(0, 2, 2, "Harga (Tinggi - Rendah)")
+        popup.menu.add(0, 3, 3, "Tanggal (Terdekat - Terjauh)")
+        popup.menu.add(0, 4, 4, "Tanggal (Terjauh - Terdekat)")
+
+        popup.setOnMenuItemClickListener { item ->
+            currentSortOption = when (item.itemId) {
+                1 -> SortOption.PRICE_ASC
+                2 -> SortOption.PRICE_DESC
+                3 -> SortOption.DATE_ASC
+                4 -> SortOption.DATE_DESC
+                else -> SortOption.NONE
+            }
+            applySortingAndSubmit()
+            true
+        }
+        popup.show()
+    }
+
+    private fun applySortingAndSubmit() {
+        if (currentSubscriptions.isEmpty()) {
+            adapter.submitList(emptyList())
+            return
+        }
+        val sortedList = when (currentSortOption) {
+            SortOption.NONE -> currentSubscriptions
+            SortOption.PRICE_ASC -> currentSubscriptions.sortedBy { it.price }
+            SortOption.PRICE_DESC -> currentSubscriptions.sortedByDescending { it.price }
+            SortOption.DATE_ASC -> currentSubscriptions.sortedBy { it.nextBilling }
+            SortOption.DATE_DESC -> currentSubscriptions.sortedByDescending { it.nextBilling }
+        }
+        adapter.submitList(sortedList)
     }
 
     override fun onDestroyView() {
