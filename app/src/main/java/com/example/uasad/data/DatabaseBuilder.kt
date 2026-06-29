@@ -14,7 +14,7 @@ object DatabaseBuilder {
                 context.applicationContext,
                 SubsTrackerDatabase::class.java,
                 "subs_tracker_db"
-            ).build()
+            ).fallbackToDestructiveMigration().build()
             INSTANCE = instance
             instance
         }
