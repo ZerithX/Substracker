@@ -47,7 +47,10 @@ class HomeFragment : Fragment() {
 
         // Setup RecyclerView
         val adapter = UpcomingAdapter { subscription ->
-            // Opsional: navigasi ke detail
+            val bundle = Bundle().apply {
+                putInt("subscriptionId", subscription.id)
+            }
+            findNavController().navigate(R.id.detailFragment, bundle)
         }
         binding.rvUpcoming.layoutManager = LinearLayoutManager(context)
         binding.rvUpcoming.adapter = adapter
