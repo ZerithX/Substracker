@@ -297,15 +297,31 @@
                     android:textColor="#757575"
                     android:textSize="14sp" />
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switch_detail_reminder"
-                    style="@style/Widget.App.SwitchMaterial"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:checked="true"
-                    android:theme="@style/ThemeOverlay.App.Switch"
-                    app:useMaterialThemeColors="true" />
+                    android:gravity="end"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_reminder_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="4dp"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-bold"
+                        android:background="@drawable/bg_badge_pill" />
+
+                    <TextView
+                        android:id="@+id/tv_reminder_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="#757575"
+                        android:textSize="11sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <View

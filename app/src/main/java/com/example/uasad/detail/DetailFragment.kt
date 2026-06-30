@@ -19,8 +19,8 @@ import com.example.uasad.data.SubscriptionRepository
 import com.example.uasad.data.SubscriptionViewModel
 import com.example.uasad.data.SubscriptionViewModelFactory
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.snackbar.Snackbar
+import com.example.uasad.settings.SettingsFragment
 import android.content.res.ColorStateList
 import android.graphics.Color
 import com.example.uasad.data.SubscriptionCategory
@@ -70,7 +70,8 @@ class DetailFragment : Fragment() {
         val tvStartDate = view.findViewById<TextView>(R.id.tv_detail_start_date)
         val tvNextBilling = view.findViewById<TextView>(R.id.tv_detail_next_billing)
         val tvCountdown = view.findViewById<TextView>(R.id.tv_detail_countdown)
-        val switchReminder = view.findViewById<SwitchMaterial>(R.id.switch_detail_reminder)
+        val tvReminderStatus = view.findViewById<TextView>(R.id.tv_reminder_status)
+        val tvReminderDesc = view.findViewById<TextView>(R.id.tv_reminder_desc)
         val tvNotes = view.findViewById<TextView>(R.id.tv_detail_notes)
 
         btnBack.setOnClickListener {
@@ -113,7 +114,21 @@ class DetailFragment : Fragment() {
                     tvCountdown.visibility = View.VISIBLE
                     tvCountdown.text = calculateDaysLeft(it.nextBilling)
                     
-                    switchReminder.isChecked = it.reminderEnabled
+                    // Setup Reminder Pill
+                    if (it.reminderEnabled) {
+                        tvReminderStatus.text = "Aktif"
+                        tvReminderStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#E8F5E9")) // Light Green
+                        tvReminderStatus.setTextColor(Color.parseColor("#2E7D32")) // Dark Green
+                        
+                        val days = SettingsFragment.getReminderDaysBefore(requireContext())
+                        tvReminderDesc.text = "Mengingatkan H-$days"
+                    } else {
+                        tvReminderStatus.text = "Tidak Aktif"
+                        tvReminderStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFEBEE")) // Light Red
+                        tvReminderStatus.setTextColor(Color.parseColor("#C62828")) // Dark Red
+                        
+                        tvReminderDesc.text = "Tanpa pengingat"
+                    }
                     
                     if (it.notes.isNotEmpty()) {
                         tvNotes.text = it.notes
