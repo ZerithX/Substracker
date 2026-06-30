@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.uasad.R
+import com.example.uasad.settings.SettingsFragment
 import com.example.uasad.data.DatabaseBuilder
 import com.example.uasad.data.Subscription
 import com.example.uasad.data.SubscriptionCategory
@@ -206,7 +207,8 @@ class AddEditFragment : Fragment() {
                 Toast.makeText(requireContext(), "Langganan berhasil diperbarui!", Toast.LENGTH_SHORT).show()
                 
                 if (reminder) {
-                    com.example.uasad.utils.AlarmScheduler.scheduleReminder(requireContext(), updatedSubscription, 1) // default 1 hari
+                    val daysBefore = SettingsFragment.getReminderDaysBefore(requireContext())
+                    com.example.uasad.utils.AlarmScheduler.scheduleReminder(requireContext(), updatedSubscription, daysBefore)
                 } else {
                     com.example.uasad.utils.AlarmScheduler.cancelReminder(requireContext(), subscriptionId)
                 }
@@ -227,7 +229,8 @@ class AddEditFragment : Fragment() {
                 viewModel.insert(newSubscription) { insertedId ->
                     val finalSubscription = newSubscription.copy(id = insertedId.toInt())
                     if (reminder) {
-                        com.example.uasad.utils.AlarmScheduler.scheduleReminder(requireContext(), finalSubscription, 1)
+                        val daysBefore = SettingsFragment.getReminderDaysBefore(requireContext())
+                        com.example.uasad.utils.AlarmScheduler.scheduleReminder(requireContext(), finalSubscription, daysBefore)
                     }
                 }
                 Toast.makeText(requireContext(), "Langganan berhasil disimpan!", Toast.LENGTH_SHORT).show()

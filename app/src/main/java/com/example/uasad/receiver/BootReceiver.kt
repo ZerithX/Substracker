@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.example.uasad.data.DatabaseBuilder
+import com.example.uasad.settings.SettingsFragment
 import com.example.uasad.utils.AlarmScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,8 +21,8 @@ class BootReceiver : BroadcastReceiver() {
                 val subscriptions = subscriptionDao.getAll().firstOrNull()
                 subscriptions?.forEach { subscription ->
                     if (subscription.reminderEnabled) {
-                        // Secara default H-1, atau bisa ambil dari preferensi jika ada
-                        AlarmScheduler.scheduleReminder(context, subscription, 1)
+                        val daysBefore = SettingsFragment.getReminderDaysBefore(context)
+                        AlarmScheduler.scheduleReminder(context, subscription, daysBefore)
                     }
                 }
             }

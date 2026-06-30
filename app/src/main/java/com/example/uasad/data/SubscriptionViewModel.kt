@@ -10,6 +10,7 @@ import androidx.lifecycle.switchMap
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.first
+import com.example.uasad.settings.SettingsFragment
 
 class SubscriptionViewModel(private val repository: SubscriptionRepository) : ViewModel() {
 
@@ -101,7 +102,8 @@ class SubscriptionViewModel(private val repository: SubscriptionRepository) : Vi
                             
                             // Jika reminder aktif, jadwalkan ulang alarm
                             if (updatedSubscription.reminderEnabled) {
-                                com.example.uasad.utils.AlarmScheduler.scheduleReminder(context, updatedSubscription, 1)
+                                val daysBefore = SettingsFragment.getReminderDaysBefore(context)
+                                com.example.uasad.utils.AlarmScheduler.scheduleReminder(context, updatedSubscription, daysBefore)
                             }
                         }
                     }
