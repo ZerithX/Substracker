@@ -1,6 +1,5 @@
 package com.example.uasad
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +11,6 @@ import com.example.uasad.data.DatabaseBuilder
 import com.example.uasad.data.SubscriptionRepository
 import com.example.uasad.data.SubscriptionViewModel
 import com.example.uasad.data.SubscriptionViewModelFactory
-import java.util.Calendar
 
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
@@ -85,21 +83,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        // Jalankan auto-renew billing maksimal sekali per hari
-        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        val lastCheck = prefs.getLong("last_billing_check_date", 0L)
-        val todayStart = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }.timeInMillis
-
-        if (lastCheck < todayStart) {
-            viewModel.checkAndResetPassedSubscriptions(applicationContext)
-            prefs.edit().putLong("last_billing_check_date", System.currentTimeMillis()).apply()
-        }
+        viewModel.checkAndResetPassedSubscriptions(applicationContext)
     }
 
     override fun onNewIntent(intent: android.content.Intent?) {
