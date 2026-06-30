@@ -6,6 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.uasad.databinding.ActivityMainBinding
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.lifecycle.ViewModelProvider
+import com.example.uasad.data.DatabaseBuilder
+import com.example.uasad.data.SubscriptionRepository
+import com.example.uasad.data.SubscriptionViewModel
+import com.example.uasad.data.SubscriptionViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     
@@ -22,6 +27,13 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         binding.bottomNavigation.setupWithNavController(navController)
+
+        // Reset subscription billing dates that have passed
+        val database = DatabaseBuilder.getInstance(applicationContext)
+        val repository = SubscriptionRepository(database.subscriptionDao())
+        val factory = SubscriptionViewModelFactory(repository)
+        val viewModel = ViewModelProvider(this, factory).get(SubscriptionViewModel::class.java)
+        viewModel.checkAndResetPassedSubscriptions(applicationContext)
 
         // logika muncul fab n bottom nav bar
         navController.addOnDestinationChangedListener { _, destination, _ ->
