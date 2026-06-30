@@ -5,9 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 enum class SubscriptionCycle (val value: String){
-    WEEKLY ("Weekly"),
-    MONTHLY ("Monthly"),
-    YEARLY ("Yearly")
+    WEEKLY ("Mingguan"),
+    MONTHLY ("Bulanan"),
+    YEARLY ("Tahunan")
 }
 
 enum class SubscriptionCategory ( val value: String){
@@ -54,4 +54,4 @@ fun Subscription.getBrandColor(): Int {
             }
         }
     }
-}
+}

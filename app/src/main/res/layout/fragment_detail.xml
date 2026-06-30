@@ -126,14 +126,14 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_price_cycle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="/ Bulan"
-                    android:textColor="#757575"
-                    android:textSize="14sp" />
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_price_cycle"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="4dp"-->
+<!--                    android:text="/ Bulan"-->
+<!--                    android:textColor="#757575"-->
+<!--                    android:textSize="14sp" />-->
             </LinearLayout>
 
             <View
@@ -299,10 +299,13 @@
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_detail_reminder"
+                    style="@style/Widget.App.SwitchMaterial"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="false"
-                    android:checked="true" />
+                    android:checked="true"
+                    android:theme="@style/ThemeOverlay.App.Switch"
+                    app:useMaterialThemeColors="true" />
             </LinearLayout>
 
             <View
@@ -375,7 +378,8 @@
             android:textColor="#E53935"
             app:icon="@android:drawable/ic_menu_delete"
             app:iconTint="#E53935"
-            app:strokeColor="#E53935" />
+            app:strokeColor="#E53935"
+            app:cornerRadius="12dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_edit"
@@ -385,7 +389,8 @@
             android:layout_weight="1"
             android:text="Edit"
             android:backgroundTint="#4E46E5"
-            app:icon="@android:drawable/ic_menu_edit" />
+            app:icon="@android:drawable/ic_menu_edit"
+            app:cornerRadius="12dp" />
 
     </LinearLayout>
 

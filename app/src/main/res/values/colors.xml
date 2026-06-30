@@ -22,4 +22,5 @@
     <color name="color_bg_lavender">#FFF4F3FF</color>
     <color name="reminder_bg">#F8F6FF</color>
     <color name="reminder_icon_bg">#FFFFFF</color>
+    <color name="active_switch">#2E02E9</color>
 </resources>

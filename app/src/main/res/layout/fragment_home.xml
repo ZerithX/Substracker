@@ -16,7 +16,6 @@
             android:id="@+id/fl_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:paddingTop="20dp"
             android:paddingBottom="16dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -51,7 +50,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#2E02E9"
+                android:background="@drawable/bg_kartu_pengeluaran"
                 android:padding="20dp">
 
                 <TextView

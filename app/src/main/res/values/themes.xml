@@ -12,7 +12,18 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="switchStyle">@style/Widget.App.SwitchMaterial</item>
     </style>
+
+    <style name="Widget.App.SwitchMaterial" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="android:theme">@style/ThemeOverlay.App.Switch</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Switch" parent="">
+        <item name="colorSecondary">@color/active_switch</item>
+        <item name="colorControlActivated">@color/active_switch</item>
+    </style>
+
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <!-- Set the splash screen background -->
         <item name="windowSplashScreenBackground">@color/splash_background</item>
