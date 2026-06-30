@@ -1,5 +1,6 @@
 package com.example.uasad
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -11,12 +12,14 @@ import com.example.uasad.data.DatabaseBuilder
 import com.example.uasad.data.SubscriptionRepository
 import com.example.uasad.data.SubscriptionViewModel
 import com.example.uasad.data.SubscriptionViewModelFactory
+import java.util.Calendar
 
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : AppCompatActivity() {
-    
+
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: SubscriptionViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +37,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setupWithNavController(navController)
 
-        // Reset subscription billing dates that have passed
+        // Setup ViewModel
         val database = DatabaseBuilder.getInstance(applicationContext)
         val repository = SubscriptionRepository(database.subscriptionDao())
         val factory = SubscriptionViewModelFactory(repository)
-        val viewModel = ViewModelProvider(this, factory).get(SubscriptionViewModel::class.java)
-        viewModel.checkAndResetPassedSubscriptions(applicationContext)
+        viewModel = ViewModelProvider(this, factory).get(SubscriptionViewModel::class.java)
 
         // logika muncul fab n bottom nav bar
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -78,6 +80,25 @@ class MainActivity : AppCompatActivity() {
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Jalankan auto-renew billing maksimal sekali per hari
+        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val lastCheck = prefs.getLong("last_billing_check_date", 0L)
+        val todayStart = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+
+        if (lastCheck < todayStart) {
+            viewModel.checkAndResetPassedSubscriptions(applicationContext)
+            prefs.edit().putLong("last_billing_check_date", System.currentTimeMillis()).apply()
         }
     }
 
