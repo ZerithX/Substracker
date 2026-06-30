@@ -18,6 +18,7 @@ import com.example.uasad.data.getBrandColor
 import com.example.uasad.data.SubscriptionRepository
 import com.example.uasad.data.SubscriptionViewModel
 import com.example.uasad.data.SubscriptionViewModelFactory
+import com.example.uasad.settings.SettingsFragment
 import com.example.uasad.data.SubscriptionCycle
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -116,7 +117,8 @@ class DetailFragment : Fragment() {
                                 displaySubscription = updatedSubscription
                                 
                                 if (updatedSubscription.reminderEnabled) {
-                                    com.example.uasad.utils.AlarmScheduler.scheduleReminder(requireContext(), updatedSubscription, 1)
+                                    val daysBefore = SettingsFragment.getReminderDaysBefore(requireContext())
+                                    com.example.uasad.utils.AlarmScheduler.scheduleReminder(requireContext(), updatedSubscription, daysBefore)
                                 }
                             }
                         }

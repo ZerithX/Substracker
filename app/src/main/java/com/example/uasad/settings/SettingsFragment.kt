@@ -16,8 +16,18 @@ class SettingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     companion object {
-        private const val PREFS_NAME = "settings_prefs"
-        private const val KEY_REMINDER_VALUE = "reminder_value"
+        const val PREFS_NAME = "settings_prefs"
+        const val KEY_REMINDER_VALUE = "reminder_value"
+
+        /**
+         * Membaca nilai reminder dari SharedPreferences dan mengonversinya ke integer hari.
+         * Contoh: "H-3" → 3, "H-7" → 7. Default ke 1 jika tidak ditemukan.
+         */
+        fun getReminderDaysBefore(context: Context): Int {
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val raw = prefs.getString(KEY_REMINDER_VALUE, "H-1") ?: "H-1"
+            return raw.removePrefix("H-").toIntOrNull() ?: 1
+        }
     }
 
     override fun onCreateView(
