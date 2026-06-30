@@ -32,4 +32,14 @@
         <item name="android:fontFamily">Inter</item>
     </style>
 
+    <style name="BottomNavActiveTextStyle" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">Inter</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CustomBottomNavIndicator" parent="">
+        <item name="android:color">@android:color/transparent</item>
+    </style>
+
 </resources>

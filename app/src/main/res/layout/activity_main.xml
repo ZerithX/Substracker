@@ -50,14 +50,16 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/color_249_249_249"
 
         app:itemIconSize="18sp"
-        app:itemTextAppearanceActive="@style/BottomNavTextStyle"
+        app:itemTextAppearanceActive="@style/BottomNavActiveTextStyle"
         app:itemTextAppearanceInactive="@style/BottomNavTextStyle"
 
         app:itemIconTint="@color/bottom_nav_colors"
         app:itemTextColor="@color/bottom_nav_colors"
         app:itemBackground="@drawable/bg_nav_item"
+        app:itemActiveIndicatorStyle="@style/CustomBottomNavIndicator"
 
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent" />
