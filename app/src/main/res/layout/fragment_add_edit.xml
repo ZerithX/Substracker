@@ -252,8 +252,10 @@
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_reminder"
+                    style="@style/Widget.App.SwitchMaterial"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:theme="@style/ThemeOverlay.App.Switch"
                     app:useMaterialThemeColors="true" />
 
             </LinearLayout>

@@ -12,7 +12,18 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="switchStyle">@style/Widget.App.SwitchMaterial</item>
     </style>
+
+    <style name="Widget.App.SwitchMaterial" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="android:theme">@style/ThemeOverlay.App.Switch</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Switch" parent="">
+        <item name="colorSecondary">@color/active_switch</item>
+        <item name="colorControlActivated">@color/active_switch</item>
+    </style>
+
     <style name="ShapeAppearance.App.FAB" parent="">
         <item name="cornerFamily">rounded</item> <!-- Can also use 'cut' -->
         <item name="cornerSize">16dp</item>     <!-- Or 50% for a circle/pill -->
