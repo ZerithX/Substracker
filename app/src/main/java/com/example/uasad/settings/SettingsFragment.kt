@@ -43,7 +43,6 @@ class SettingsFragment : Fragment() {
 
         setupReminder()
         setupAboutSection()
-        setupHeaderNotification()
     }
 
     /**
@@ -93,15 +92,6 @@ class SettingsFragment : Fragment() {
             binding.aboutAppVersion.text = "Versi ${packageInfo.versionName}"
         } catch (_: Exception) {
             // Gunakan default "Versi 1.0" dari XML
-        }
-    }
-
-    /**
-     * Setup tombol notifikasi di header.
-     */
-    private fun setupHeaderNotification() {
-        binding.btnHeaderNotification.setOnClickListener {
-            Toast.makeText(requireContext(), "Tidak ada notifikasi baru", Toast.LENGTH_SHORT).show()
         }
     }
 
