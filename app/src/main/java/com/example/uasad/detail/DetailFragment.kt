@@ -18,8 +18,6 @@ import com.example.uasad.data.getBrandColor
 import com.example.uasad.data.SubscriptionRepository
 import com.example.uasad.data.SubscriptionViewModel
 import com.example.uasad.data.SubscriptionViewModelFactory
-import com.example.uasad.settings.SettingsFragment
-import com.example.uasad.data.SubscriptionCycle
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.snackbar.Snackbar
@@ -82,54 +80,12 @@ class DetailFragment : Fragment() {
         if (subscriptionId != -1) {
             viewModel.getById(subscriptionId).observe(viewLifecycleOwner) { subscription ->
                 subscription?.let {
-                    var displaySubscription = it
-                    
-                    // Auto-renew if the next billing date has passed
-                    val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
-                    val today = java.util.Calendar.getInstance()
-                    today.set(java.util.Calendar.HOUR_OF_DAY, 0)
-                    today.set(java.util.Calendar.MINUTE, 0)
-                    today.set(java.util.Calendar.SECOND, 0)
-                    today.set(java.util.Calendar.MILLISECOND, 0)
-
-                    try {
-                        val billingDate = sdf.parse(it.nextBilling)
-                        if (billingDate != null) {
-                            val calendar = java.util.Calendar.getInstance()
-                            calendar.time = billingDate
-                            calendar.set(java.util.Calendar.HOUR_OF_DAY, 0)
-                            calendar.set(java.util.Calendar.MINUTE, 0)
-                            calendar.set(java.util.Calendar.SECOND, 0)
-                            calendar.set(java.util.Calendar.MILLISECOND, 0)
-
-                            if (calendar.before(today)) {
-                                while (calendar.before(today)) {
-                                    when (it.cycle) {
-                                        SubscriptionCycle.WEEKLY -> calendar.add(java.util.Calendar.WEEK_OF_YEAR, 1)
-                                        SubscriptionCycle.MONTHLY -> calendar.add(java.util.Calendar.MONTH, 1)
-                                        SubscriptionCycle.YEARLY -> calendar.add(java.util.Calendar.YEAR, 1)
-                                    }
-                                }
-                                val newBillingDateStr = sdf.format(calendar.time)
-                                val updatedSubscription = it.copy(nextBilling = newBillingDateStr)
-                                
-                                viewModel.update(updatedSubscription)
-                                displaySubscription = updatedSubscription
-                                
-                                if (updatedSubscription.reminderEnabled) {
-                                    val daysBefore = SettingsFragment.getReminderDaysBefore(requireContext())
-                                    com.example.uasad.utils.AlarmScheduler.scheduleReminder(requireContext(), updatedSubscription, daysBefore)
-                                }
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
-                    currentSubscription = displaySubscription
+                    // Auto-renew ditangani oleh MainActivity.onResume() dengan guard harian.
+                    // DetailFragment cukup menampilkan data terbaru dari DB.
+                    currentSubscription = it
                     
                     // Get brand color (same as grid and list backgrounds)
-                    val brandColor = displaySubscription.getBrandColor()
+                    val brandColor = it.getBrandColor()
                     
                     // Set fragment background to the brand color
                     view.setBackgroundColor(brandColor)
@@ -138,29 +94,29 @@ class DetailFragment : Fragment() {
                     tvAvatar.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
                     tvAvatar.setTextColor(brandColor)
                     
-                    val initial = displaySubscription.name.firstOrNull()?.uppercase() ?: "S"
+                    val initial = it.name.firstOrNull()?.uppercase() ?: "S"
                     tvAvatar.text = initial
                     
-                    tvName.text = displaySubscription.name
-                    tvCategory.text = displaySubscription.category.value
-                    styleCategoryBadge(tvCategory, displaySubscription.category)
+                    tvName.text = it.name
+                    tvCategory.text = it.category.value
+                    styleCategoryBadge(tvCategory, it.category)
                     
                     val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
-                    tvPrice.text = formatRupiah.format(displaySubscription.price).replace("Rp", "Rp ")
+                    tvPrice.text = formatRupiah.format(it.price).replace("Rp", "Rp ")
                     
-                    tvCycle.text = displaySubscription.cycle.value
+                    tvCycle.text = it.cycle.value
                     
-                    tvStartDate.text = displaySubscription.startDate
-                    tvNextBilling.text = displaySubscription.nextBilling
+                    tvStartDate.text = it.startDate
+                    tvNextBilling.text = it.nextBilling
                     
                     // Simple countdown logic (optional feature based on UI)
                     tvCountdown.visibility = View.VISIBLE
-                    tvCountdown.text = calculateDaysLeft(displaySubscription.nextBilling)
+                    tvCountdown.text = calculateDaysLeft(it.nextBilling)
                     
-                    switchReminder.isChecked = displaySubscription.reminderEnabled
+                    switchReminder.isChecked = it.reminderEnabled
                     
-                    if (displaySubscription.notes.isNotEmpty()) {
-                        tvNotes.text = displaySubscription.notes
+                    if (it.notes.isNotEmpty()) {
+                        tvNotes.text = it.notes
                     } else {
                         tvNotes.text = "Tidak ada catatan"
                     }

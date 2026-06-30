@@ -15,8 +15,9 @@ import com.example.uasad.data.SubscriptionViewModelFactory
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : AppCompatActivity() {
-    
+
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: SubscriptionViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +35,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setupWithNavController(navController)
 
-        // Reset subscription billing dates that have passed
+        // Setup ViewModel
         val database = DatabaseBuilder.getInstance(applicationContext)
         val repository = SubscriptionRepository(database.subscriptionDao())
         val factory = SubscriptionViewModelFactory(repository)
-        val viewModel = ViewModelProvider(this, factory).get(SubscriptionViewModel::class.java)
-        viewModel.checkAndResetPassedSubscriptions(applicationContext)
+        viewModel = ViewModelProvider(this, factory).get(SubscriptionViewModel::class.java)
 
         // logika muncul fab n bottom nav bar
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -79,6 +79,11 @@ class MainActivity : AppCompatActivity() {
                 requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkAndResetPassedSubscriptions(applicationContext)
     }
 
     override fun onNewIntent(intent: android.content.Intent?) {
