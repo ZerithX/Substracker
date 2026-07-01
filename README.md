@@ -1,7 +1,7 @@
 # 📱 SubsTracker
 
 <p align="center">
-  <img src="app/src/main/res/drawable/ic_splash_content.png" width="240" height="240" alt="SubsTracker Logo" />
+  <img src="app/src/main/res/drawable/logo.png" width="240" height="240" alt="SubsTracker Logo" />
 </p>
 
 <h3 align="center">SubsTracker Application</h3>
