@@ -87,6 +87,12 @@ class HomeFragment : Fragment() {
                         
                         var countThisMonth = 0
                         while (true) {
+                            when (subscription.cycle) {
+                                SubscriptionCycle.WEEKLY -> calendar.add(java.util.Calendar.WEEK_OF_YEAR, 1)
+                                SubscriptionCycle.MONTHLY -> calendar.add(java.util.Calendar.MONTH, 1)
+                                SubscriptionCycle.YEARLY -> calendar.add(java.util.Calendar.YEAR, 1)
+                            }
+
                             val year = calendar.get(java.util.Calendar.YEAR)
                             val month = calendar.get(java.util.Calendar.MONTH)
 
@@ -96,12 +102,6 @@ class HomeFragment : Fragment() {
 
                             if (year == currentYear && month == currentMonth) {
                                 countThisMonth++
-                            }
-                            
-                            when (subscription.cycle) {
-                                SubscriptionCycle.WEEKLY -> calendar.add(java.util.Calendar.WEEK_OF_YEAR, 1)
-                                SubscriptionCycle.MONTHLY -> calendar.add(java.util.Calendar.MONTH, 1)
-                                SubscriptionCycle.YEARLY -> calendar.add(java.util.Calendar.YEAR, 1)
                             }
                         }
 
