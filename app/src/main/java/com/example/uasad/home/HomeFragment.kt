@@ -72,12 +72,11 @@ class HomeFragment : Fragment() {
         viewModel.allSubscriptions.observe(viewLifecycleOwner) { subscriptions ->
             binding.tvActiveSubs.text = "${subscriptions.size} langganan aktif"
             
+            val currentYearMonth = SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(Date())
             var total = 0.0
             subscriptions.forEach { subscription ->
-                total += when (subscription.cycle) {
-                    SubscriptionCycle.WEEKLY -> subscription.price * 4
-                    SubscriptionCycle.MONTHLY -> subscription.price
-                    SubscriptionCycle.YEARLY -> subscription.price / 12
+                if (subscription.nextBilling.startsWith(currentYearMonth)) {
+                    total += subscription.price
                 }
             }
             
