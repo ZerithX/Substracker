@@ -72,11 +72,43 @@ class HomeFragment : Fragment() {
         viewModel.allSubscriptions.observe(viewLifecycleOwner) { subscriptions ->
             binding.tvActiveSubs.text = "${subscriptions.size} langganan aktif"
             
-            val currentYearMonth = SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(Date())
+            val today = java.util.Calendar.getInstance()
+            val currentYear = today.get(java.util.Calendar.YEAR)
+            val currentMonth = today.get(java.util.Calendar.MONTH)
+            val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+
             var total = 0.0
             subscriptions.forEach { subscription ->
-                if (subscription.nextBilling.startsWith(currentYearMonth)) {
-                    total += subscription.price
+                try {
+                    val startDate = sdf.parse(subscription.startDate)
+                    if (startDate != null) {
+                        val calendar = java.util.Calendar.getInstance()
+                        calendar.time = startDate
+                        
+                        var countThisMonth = 0
+                        while (true) {
+                            val year = calendar.get(java.util.Calendar.YEAR)
+                            val month = calendar.get(java.util.Calendar.MONTH)
+
+                            if (year > currentYear || (year == currentYear && month > currentMonth)) {
+                                break
+                            }
+
+                            if (year == currentYear && month == currentMonth) {
+                                countThisMonth++
+                            }
+                            
+                            when (subscription.cycle) {
+                                SubscriptionCycle.WEEKLY -> calendar.add(java.util.Calendar.WEEK_OF_YEAR, 1)
+                                SubscriptionCycle.MONTHLY -> calendar.add(java.util.Calendar.MONTH, 1)
+                                SubscriptionCycle.YEARLY -> calendar.add(java.util.Calendar.YEAR, 1)
+                            }
+                        }
+
+                        total += (subscription.price * countThisMonth)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
             

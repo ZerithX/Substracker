@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_bg_lavender"
+    android:background="@color/white"
     tools:context=".addedit.AddEditFragment">
 
     <!-- Header + button back + judul -->
@@ -270,7 +270,7 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/color_bg_lavender">
+        android:background="@color/white">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
