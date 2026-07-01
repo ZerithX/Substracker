@@ -72,12 +72,43 @@ class HomeFragment : Fragment() {
         viewModel.allSubscriptions.observe(viewLifecycleOwner) { subscriptions ->
             binding.tvActiveSubs.text = "${subscriptions.size} langganan aktif"
             
+            val today = java.util.Calendar.getInstance()
+            val currentYear = today.get(java.util.Calendar.YEAR)
+            val currentMonth = today.get(java.util.Calendar.MONTH)
+            val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+
             var total = 0.0
             subscriptions.forEach { subscription ->
-                total += when (subscription.cycle) {
-                    SubscriptionCycle.WEEKLY -> subscription.price * 4
-                    SubscriptionCycle.MONTHLY -> subscription.price
-                    SubscriptionCycle.YEARLY -> subscription.price / 12
+                try {
+                    val startDate = sdf.parse(subscription.startDate)
+                    if (startDate != null) {
+                        val calendar = java.util.Calendar.getInstance()
+                        calendar.time = startDate
+                        
+                        var countThisMonth = 0
+                        while (true) {
+                            when (subscription.cycle) {
+                                SubscriptionCycle.WEEKLY -> calendar.add(java.util.Calendar.WEEK_OF_YEAR, 1)
+                                SubscriptionCycle.MONTHLY -> calendar.add(java.util.Calendar.MONTH, 1)
+                                SubscriptionCycle.YEARLY -> calendar.add(java.util.Calendar.YEAR, 1)
+                            }
+
+                            val year = calendar.get(java.util.Calendar.YEAR)
+                            val month = calendar.get(java.util.Calendar.MONTH)
+
+                            if (year > currentYear || (year == currentYear && month > currentMonth)) {
+                                break
+                            }
+
+                            if (year == currentYear && month == currentMonth) {
+                                countThisMonth++
+                            }
+                        }
+
+                        total += (subscription.price * countThisMonth)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
             
