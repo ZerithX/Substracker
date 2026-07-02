@@ -22,7 +22,10 @@ object AlarmScheduler {
             val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val billingDate = sdf.parse(subscription.nextBilling) ?: return
 
-            val calendar = Calendar.getInstance().apply {
+            val calendar = Calendar.getInstance().apply { // Testing Only
+                add(Calendar.SECOND, 1)
+            }
+            /* val calendar = Calendar.getInstance().apply {
                 time = billingDate
                 add(Calendar.DAY_OF_YEAR, -reminderDaysBefore)
                 set(Calendar.HOUR_OF_DAY, 9)
@@ -35,7 +38,7 @@ object AlarmScheduler {
             if (calendar.timeInMillis < System.currentTimeMillis()) {
                 // Bisa juga di set untuk bulan depan, tapi biasanya handled saat insert/update
                 return
-            }
+            } */
 
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, ReminderReceiver::class.java).apply {

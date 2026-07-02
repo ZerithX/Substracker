@@ -27,11 +27,28 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Wait for 2 seconds then navigate to HomeFragment
+        // Wait for 2 seconds then navigate
         Handler(Looper.getMainLooper()).postDelayed({
             // Ensure fragment is still attached before navigating
             if (isAdded) {
-                findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+                val openDetailId = requireActivity().intent.getIntExtra("OPEN_DETAIL", -1)
+                
+                if (openDetailId != -1) {
+                    // Remove extra so it doesn't trigger again (e.g. on rotation)
+                    requireActivity().intent.removeExtra("OPEN_DETAIL")
+                    
+                    val bundle = Bundle().apply {
+                        putInt("subscriptionId", openDetailId)
+                    }
+                    
+                    // Navigate to Home first, so it's in the backstack
+                    findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+                    // Then navigate to Detail
+                    findNavController().navigate(R.id.detailFragment, bundle)
+                    
+                } else {
+                    findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+                }
             }
         }, 2000)
     }

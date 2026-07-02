@@ -65,16 +65,7 @@ class MainActivity : AppCompatActivity() {
         binding.fabAdd.setOnClickListener {
             navController.navigate(R.id.addEditFragment)
         }
-        
-        // Handle Notification Intent
-        val openDetailId = intent.getIntExtra("OPEN_DETAIL", -1)
-        if (openDetailId != -1) {
-            val bundle = Bundle().apply {
-                putInt("subscriptionId", openDetailId)
-            }
-            navController.navigate(R.id.detailFragment, bundle)
-        }
-        
+        // Remove direct navigation on cold start; it is now handled by SplashFragment.
         // Request POST_NOTIFICATIONS runtime permission for Android 13+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
